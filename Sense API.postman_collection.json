@@ -1,0 +1,705 @@
+{
+	"info": {
+		"_postman_id": "1ac4f42b-d6fb-48b7-bff6-fbcde0d3db2d",
+		"name": "Sense API",
+		"description": "Calls to the Sense API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Get Authentication Token",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b8f49130-95ad-4bef-ba3d-1739d9b7bcdf",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "0e71f311-cb1c-4df6-8de1-58b1173b4be3",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.globals.set(\"access_token\", jsonData.access_token);",
+									"pm.globals.set(\"bridge_server\", jsonData.bridge_server);",
+									"pm.globals.set(\"monitor_id\", jsonData.monitors[0].id)",
+									"pm.globals.set(\"user_id\", jsonData.user_id)"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "<your sense email address>",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "<your sense password>",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.sense.com/apiservice/api/v1/authenticate",
+							"protocol": "https",
+							"host": [
+								"api",
+								"sense",
+								"com"
+							],
+							"path": [
+								"apiservice",
+								"api",
+								"v1",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Monitor",
+			"item": [
+				{
+					"name": "Get Monitor Status",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b8f49130-95ad-4bef-ba3d-1739d9b7bcdf",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "146c1522-b382-4a88-ae5a-28f23d84f4f4",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "https://api.sense.com/apiservice/api/v1/app/monitors/{{monitor_id}}/status",
+							"protocol": "https",
+							"host": [
+								"api",
+								"sense",
+								"com"
+							],
+							"path": [
+								"apiservice",
+								"api",
+								"v1",
+								"app",
+								"monitors",
+								"{{monitor_id}}",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Monitor History",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b8f49130-95ad-4bef-ba3d-1739d9b7bcdf",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "146c1522-b382-4a88-ae5a-28f23d84f4f4",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{access_token}}",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://api.sense.com/apiservice/api/v1/app/history/usage?monitor_id={{monitor_id}}&granularity=minute&frames=5400&start=2018-09-18T00:00:00Z",
+							"protocol": "https",
+							"host": [
+								"api",
+								"sense",
+								"com"
+							],
+							"path": [
+								"apiservice",
+								"api",
+								"v1",
+								"app",
+								"history",
+								"usage"
+							],
+							"query": [
+								{
+									"key": "monitor_id",
+									"value": "{{monitor_id}}"
+								},
+								{
+									"key": "granularity",
+									"value": "minute"
+								},
+								{
+									"key": "frames",
+									"value": "5400"
+								},
+								{
+									"key": "start",
+									"value": "2018-09-18T00:00:00Z"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Devices",
+			"item": [
+				{
+					"name": "Get Devices",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b8f49130-95ad-4bef-ba3d-1739d9b7bcdf",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "146c1522-b382-4a88-ae5a-28f23d84f4f4",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{access_token}}",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://api.sense.com/apiservice/api/v1/app/monitors/{{monitor_id}}/devices",
+							"protocol": "https",
+							"host": [
+								"api",
+								"sense",
+								"com"
+							],
+							"path": [
+								"apiservice",
+								"api",
+								"v1",
+								"app",
+								"monitors",
+								"{{monitor_id}}",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Specific Device details",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b8f49130-95ad-4bef-ba3d-1739d9b7bcdf",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "146c1522-b382-4a88-ae5a-28f23d84f4f4",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{access_token}}",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://api.sense.com/apiservice/api/v1/app/monitors/{{monitor_id}}/devices/210c8550",
+							"protocol": "https",
+							"host": [
+								"api",
+								"sense",
+								"com"
+							],
+							"path": [
+								"apiservice",
+								"api",
+								"v1",
+								"app",
+								"monitors",
+								"{{monitor_id}}",
+								"devices",
+								"210c8550"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Always On",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b8f49130-95ad-4bef-ba3d-1739d9b7bcdf",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "146c1522-b382-4a88-ae5a-28f23d84f4f4",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{access_token}}",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://api.sense.com/apiservice/api/v1/app/monitors/{{monitor_id}}/devices/always_on",
+							"protocol": "https",
+							"host": [
+								"api",
+								"sense",
+								"com"
+							],
+							"path": [
+								"apiservice",
+								"api",
+								"v1",
+								"app",
+								"monitors",
+								"{{monitor_id}}",
+								"devices",
+								"always_on"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Other",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b8f49130-95ad-4bef-ba3d-1739d9b7bcdf",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "146c1522-b382-4a88-ae5a-28f23d84f4f4",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{access_token}}",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://api.sense.com/apiservice/api/v1/app/monitors/{{monitor_id}}/devices/unknown",
+							"protocol": "https",
+							"host": [
+								"api",
+								"sense",
+								"com"
+							],
+							"path": [
+								"apiservice",
+								"api",
+								"v1",
+								"app",
+								"monitors",
+								"{{monitor_id}}",
+								"devices",
+								"unknown"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Timeline",
+			"item": [
+				{
+					"name": "Get TimeLine",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b8f49130-95ad-4bef-ba3d-1739d9b7bcdf",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "3edb56bc-0a5a-4574-9512-b7de00062444",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"url": {
+							"raw": "https://api.sense.com/apiservice/api/v1/users/{{user_id}}/timeline",
+							"protocol": "https",
+							"host": [
+								"api",
+								"sense",
+								"com"
+							],
+							"path": [
+								"apiservice",
+								"api",
+								"v1",
+								"users",
+								"{{user_id}}",
+								"timeline"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Trends",
+			"item": [
+				{
+					"name": "Get Trends",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b8f49130-95ad-4bef-ba3d-1739d9b7bcdf",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "78152b3f-91d2-42a5-b58a-c1a071877ea5",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"url": {
+							"raw": "https://api.sense.com/apiservice/api/v1/app/history/trends?monitor_id={{monitor_id}}&device_id=usage&scale=hour&start=2018-09-19T00:00:00.000Z",
+							"protocol": "https",
+							"host": [
+								"api",
+								"sense",
+								"com"
+							],
+							"path": [
+								"apiservice",
+								"api",
+								"v1",
+								"app",
+								"history",
+								"trends"
+							],
+							"query": [
+								{
+									"key": "monitor_id",
+									"value": "{{monitor_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "usage"
+								},
+								{
+									"key": "scale",
+									"value": "hour"
+								},
+								{
+									"key": "start",
+									"value": "2018-09-19T00:00:00.000Z"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "8d6dd47e-a169-42c2-ae55-04ad7b8e4848",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "bd07fadc-fb0f-4013-a895-2244952f4af2",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "372d9adf-03e4-4fd1-b9e0-ff5d3393d52d",
+			"key": "Api-Url",
+			"value": "https://api.sense.com/apiservice/api/v1/",
+			"type": "string"
+		}
+	]
+}
